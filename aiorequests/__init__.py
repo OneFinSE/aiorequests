@@ -1,13 +1,2 @@
-from .aiorequests import (
-    get,
-    options,
-    head,
-    post,
-    put,
-    patch,
-    delete,
-    request,
-    _request,
-    get_tasks,
-    run_async,
-)
+from .aiorequests import (_request, delete, get, get_tasks, head, options,
+                          patch, post, put, request, run_async)
