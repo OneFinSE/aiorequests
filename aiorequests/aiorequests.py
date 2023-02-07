@@ -1,6 +1,6 @@
 import asyncio
 from types import SimpleNamespace
-from typing import Any, Iterable, Mapping, Optional, Union
+from typing import Any, Iterable, Literal, Mapping, Optional, Union
 
 import aiohttp
 from aiohttp.client import ClientTimeout
@@ -504,13 +504,17 @@ def request(
     )
 
 
-async def _request(session, *args, **kwargs):
-    response_method = kwargs.pop('response_method', 'json')
-    with_headers = kwargs.pop('with_headers', False)
+async def _request(
+    session,
+    *args,
+    response_method: Literal['json', 'read', 'text'] = 'json',
+    return_response_object: bool = False,
+    **kwargs,
+):
     async with session.request(*args, **kwargs) as resp:
-        if with_headers:
-            return await getattr(resp, response_method)(), resp.headers
-        return await getattr(resp, response_method)()
+        if return_response_object:
+            return resp
+        return resp.status, await getattr(resp, response_method)()
 
 
 async def get_tasks(requests):
